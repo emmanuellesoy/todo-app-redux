@@ -1,22 +1,46 @@
-import logo from './logo.svg';
-import './App.css';
+import { useSelector, useDispatch } from "react-redux";
 
-function App() {
+import './App.css';
+import {
+  addTask,
+  deleteTask,
+} from "./actions/todo";
+
+const App = () => {
+
+  const tasks = useSelector(state => state);
+
+const dispatch = useDispatch();
+
+  const save = (event) => {
+    event.preventDefault();
+    dispatch(addTask(event.target.task.value));
+  }
+
+  const remove = (id) => {
+    dispatch(deleteTask(id));
+  }
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <form onSubmit={(event) => {save(event)}}>
+          <input type="text" name="task" />
+          <button>Save</button>
+        </form>
+        <div>
+          <ul>
+            {tasks.map((task) => {
+              return (
+                <li key={task.id}>
+                  {task.value}
+                  &nbsp;
+                  <button onClick={() => remove(task.id)}>[X]</button>
+                </li>
+              )
+            })}
+          </ul>
+        </div>
       </header>
     </div>
   );
